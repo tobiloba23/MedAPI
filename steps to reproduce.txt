@@ -1,0 +1,58 @@
+dotnet new reactredux
+
+cd ClientApp
+
+npm upgrade react-scripts --latest
+
+npm remove eslint eslint-config-react-app eslint-plugin-flowtype eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react
+
+npm install typescript --latest --save-dev
+
+At this point you can dotnet run and dotnet build
+
+To debug: Go to debug section and click Run and Debug
+Then in launch.json add configuration then select net core web application.
+Back in launch.json change 
+            "program": "${workspaceFolder}/PresentationLayer/bin/Debug/<target-framework>/<project-name.dll>",
+to
+            "program": "${workspaceFolder}/PresentationLayer/bin/Debug/net5.0/MedchartSkillsAssessment.dll",
+
+Up until this point we just setup everything like visual studio will do for a react-redux project
+
+Install EntityFrameworkCore in DataAccessLayer class library
+Create appsettings.json file
+Add section to .csproj file
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>   
+  </ItemGroup>
+
+Copy user secretsId from a csproj file in project open in visual studio and using user secrets
+    <UserSecretsId>bc719384-adce-4fe0-9d61-b6d4022abd7a</UserSecretsId>
+
+command pallette: ctrl-shift-p 
+type nuget to use extension; type EntityFrameworkCore; select version. This method is similar to nuget solution package manager tool
+
+dotnet add package Microsoft.EntityFrameworkCore can also be used as well. This method is similar to nuget package manager console
+dotnet add reference .csproj files 
+
+dotnet tool install --global dotnet-ef
+
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+
+// To roll back InitialCreate migration
+dotnet ef database update 0	(update-database 0 in VS Studio)
+// To roll back subsequent migration
+dotnet ef database update <Previous Migration Name> 
+// Then
+dotnet ef migrations remove (Remove-Migration in VS Studio)
+
+
+After installing log4net change the value attribute of file tag in log4net.config
+Install Microsoft.Extensions.Logging.Log4Net.AspNetCore -Version 5.0.0
+to setup log4net for dotnet 5 then add this line to top of startup.configure() or program.main()
+
+            loggerFactory.AddLog4Net();
